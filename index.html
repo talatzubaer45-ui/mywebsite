@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naz Dental Care - Snake Level Up</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        body {
+            min-height: 200vh;
+            background: #ffffff;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 120px 0 60px 0; overflow-x: hidden; position: relative;
+        }
+
+        /* স্কোর বোর্ড */
+        #score-board { 
+            position: fixed; top: 20px; background: #2ecc71; color: white; 
+            padding: 10px 25px; border-radius: 50px; font-weight: bold; 
+            z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        
+        /* গেম অবজেক্ট */
+        .game-bubble, .game-tooth, .game-snake { position: fixed; z-index: 10000; cursor: pointer; }
+        .game-bubble { bottom: -100px; background: radial-gradient(circle at 30% 30%, #2ecc71, #27ae60); border: 2px solid #fff; border-radius: 50%; animation: rise linear forwards; }
+        .game-tooth { top: -100px; font-size: 40px; animation: fall linear forwards; }
+        
+        /* সাপের স্টাইল ও অ্যানিমেশন */
+        .game-snake { font-size: 60px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
+
+        @keyframes rise { 0% { transform: translateY(0); opacity: 0.9; } 100% { transform: translateY(-120vh); opacity: 0; } }
+        @keyframes fall { 0% { transform: translateY(0); opacity: 0.9; } 100% { transform: translateY(120vh); opacity: 0; } }
+        
+        /* সাপের এদিক-সেদিক চলাচলের অ্যানিমেশন */
+        @keyframes snakeMove {
+            0% { left: -100px; top: var(--y-start); transform: scale(1); }
+            50% { transform: scale(1.2) rotate(20deg); }
+            100% { left: 110vw; top: var(--y-end); transform: scale(1); }
+        }
+
+        /* ভাসা ভাসা টেক্সট অ্যানিমেশন */
+        @keyframes floatEffect {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-text { display: inline-block; animation: floatEffect 3s infinite ease-in-out; }
+
+        /* মেইন কার্ড */
+        .container {
+            position: relative; background: #ffffff; padding: 95px 25px 40px;
+            border-radius: 40px; max-width: 410px; width: 92%; text-align: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1); z-index: 10;
+            animation: floatEffect 5s infinite ease-in-out;
+        }
+
+        .main-logo { width: 150px; height: 150px; border-radius: 50%; border: 5px solid #2ecc71; position: absolute; top: -75px; left: 50%; transform: translateX(-50%); object-fit: cover; background: white; }
+        .address-box { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 15px; text-align: left; border-left: 5px solid #2ecc71; }
+        .input-form { margin-top: 20px; background: #fff; padding: 15px; border-radius: 15px; border: 1px dashed #2ecc71; }
+        .u-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; outline: none; }
+        .submit-btn { width: 100%; padding: 15px; background: #2ecc71; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+        #secret-contact { display: none; background: #e8f6f3; padding: 20px; border-radius: 20px; margin-top: 20px; border: 2px solid #2ecc71; }
+        .footer-img, .screenshot-img { width: 92%; max-width: 450px; border-radius: 25px; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 10; }
+    </style>
+</head>
+<body>
+
+    <div id="score-board">স্কোর: <span id="score">0</span></div>
+
+    <div class="container">
+        <img src="IMG-20260201-WA0000.jpg" alt="Logo" class="main-logo">
+        <h1 class="float-text">Naz Dental Care</h1>
+        <p class="float-text" style="color: #27ae60; font-weight: bold; font-size: 20px;">ডাঃ ফাইরুজ হাফিজা হুমা</p>
+        
+        <div class="address-box">
+            <p>📍 <b>ঠিকানা:</b> ৪০৫ ঘাটান্দি, ভূয়াপুর, টাঙ্গাইল।</p>
+            <p>🕒 <b>সময়:</b> সকাল ১০টা - রাত ৮টা</p>
+        </div>
+
+        <div id="form-container" class="input-form">
+            <input type="text" id="u-name" class="u-input" placeholder="আপনার নাম">
+            <input type="tel" id="u-mobile" class="u-input" placeholder="মোবাইল নম্বর">
+            <button class="submit-btn" onclick="revealNumber()">নম্বর দেখুন</button>
+        </div>
+
+        <div id="secret-contact">
+            <p style="color: #1e8449; font-weight: bold;">তথ্য সংরক্ষিত হয়েছে।</p>
+            <p style="font-size: 18px; margin-top: 10px;">📞 <b>হটলাইন:</b> ০১৭৯১-৫৬১৭৯৫</p>
+            <a href="tel:+8801791561795" style="display:block; margin-top:10px; background:#27ae60; color:white; padding:10px; border-radius:10px; text-decoration:none; font-weight:bold;">কল করুন</a>
+        </div>
+    </div>
+
+    <img src="IMG-20260131-WA0001.jpg" alt="Banner" class="footer-img">
+    <img src="Screenshot_20260131-232835.jpg" alt="Services" class="screenshot-img">
+
+    <script>
+        let score = 0;
+        let snakeInterval;
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score').innerText = score;
+            
+            // ১০০ স্কোর পার হলে অনেকগুলো সাপ আসতে শুরু করবে
+            if (score >= 100 && !snakeInterval) {
+                document.getElementById('score-board').style.background = "#c0392b"; // বিপদ সংকেত!
+                snakeInterval = setInterval(createSnake, 2000); // প্রতি ২ সেকেন্ডে একটি সাপ আসবে
+            } else if (score >= 50 && score < 52) {
+                createSnake(); // ৫০ হলে প্রথম সাপ
+            }
+        }
+
+        function createSnake() {
+            const snake = document.createElement('div');
+            snake.className = 'game-snake';
+            snake.innerHTML = '🐍';
+            
+            // র্যান্ডম পজিশন সেট করা
+            const yStart = Math.random() * 80 + 10 + 'vh';
+            const yEnd = Math.random() * 80 + 10 + 'vh';
+            snake.style.setProperty('--y-start', yStart);
+            snake.style.setProperty('--y-end', yEnd);
+            snake.style.animation = "snakeMove 4s linear forwards";
+
+            snake.onclick = () => {
+                updateScore(15); // সাপে ক্লিক করলে ১৫ পয়েন্ট
+                snake.style.transform = 'scale(0)';
+                setTimeout(() => snake.remove(), 200);
+            };
+
+            document.body.appendChild(snake);
+            setTimeout(() => { if(snake.parentNode) snake.remove(); }, 4000);
+        }
+
+        function createB() {
+            const b = document.createElement('div'); b.className='game-bubble';
+            const sz = Math.random()*50+40+'px'; b.style.width=sz; b.style.height=sz;
+            b.style.left=Math.random()*90+'vw'; b.style.animationDuration=Math.random()*3+4+'s';
+            b.onclick=()=>{ updateScore(1); b.remove(); };
+            document.body.appendChild(b); setTimeout(()=>b.remove(),7000);
+        }
+
+        function createT() {
+            const t = document.createElement('div'); t.className='game-tooth'; t.innerHTML='🦷';
+            t.style.left=Math.random()*90+'vw'; t.style.animationDuration=Math.random()*4+5+'s';
+            t.onclick=()=>{ updateScore(5); t.remove(); };
+            document.body.appendChild(t); setTimeout(()=>t.remove(),10000);
+        }
+
+        setInterval(createB, 1200);
+        setInterval(createT, 3000);
+
+        function revealNumber() {
+            const n = document.getElementById('u-name').value;
+            const m = document.getElementById('u-mobile').value;
+            if(n.length > 2 && m.length > 10) {
+                document.getElementById('form-container').style.display = "none";
+                document.getElementById('secret-contact').style.display = "block";
+            } else { alert("সঠিক তথ্য দিন।"); }
+        }
+    </script>
+</body>
+</html>
