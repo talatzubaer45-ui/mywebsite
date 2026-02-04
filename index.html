@@ -1,488 +1,488 @@
 <!DOCTYPE html>
 <html lang="bn">
-    <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Naz Dental Care - Extreme Game Mode</title>
-        <style>/* প্রাইজ কার্ড গ্লাস ইফেক্ট */
-        .price-container {
-                width: 92%;
-                max-width: 380px;
-                margin: 20px 0;
-                padding: 20px;
-                background: rgba(255, 255, 255, 0.07);
-                backdrop-filter: blur(15px);
-                -webkit-backdrop-filter: blur(15px);
-                border-radius: 30px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                z-index: 100;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naz Dental Care - Extreme Game Mode</title>
+    <style>/* প্রাইজ কার্ড গ্লাস ইফেক্ট */
+.price-container {
+    width: 92%;
+    max-width: 380px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.price-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.price-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 18px;
+    border-radius: 15px;
+    color: #ffffff;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+}
+
+.price-card:hover {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+}
+
+.price-card b {
+    color: #2ecc71;
+}
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body {
+            background: #000;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 100px 0 50px 0;
+            min-height: 160vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        
-        .price-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
+
+        /* গ্লোয়িং টিউব ক্যানভাস */
+        #canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1; 
+            pointer-events: none;
         }
-        
-        .price-card {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: rgba(255, 255, 255, 0.05);
-                padding: 12px 18px;
-                border-radius: 15px;
-                color: #ffffff;
-                font-size: 14px;
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                transition: 0.3s;
+
+        /* স্কোর বোর্ড */
+        #score-board { 
+            position: fixed; top: 20px; background: rgba(46, 204, 113, 0.9); 
+            backdrop-filter: blur(10px); color: white; 
+            padding: 8px 25px; border-radius: 50px; font-weight: bold; 
+            z-index: 20000; border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
         }
-        
-        .price-card:hover {
-                background: rgba(46, 204, 113, 0.2);
-                border-color: #2ecc71;
-        }
-        
-        .price-card b {
-                color: #2ecc71;
-        }
-        
-                * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-                
-                body {
-                                background: #000;
-                                display: flex; flex-direction: column; align-items: center;
-                                padding: 100px 0 50px 0;
-                                min-height: 160vh;
-                                overflow-y: auto;
-                                -webkit-overflow-scrolling: touch;
-                }
-        
-                /* গ্লোয়িং টিউব ক্যানভাস */
-                #canvas {
-                                position: fixed; top: 0; left: 0;
-                                width: 100%; height: 100%;
-                                z-index: 1; 
-                    pointer-events: none;
-                }
-        
-                /* স্কোর বোর্ড */
-                #score-board { 
-                    position: fixed; top: 20px; background: rgba(46, 204, 113, 0.9); 
-                    backdrop-filter: blur(10px); color: white; 
-                    padding: 8px 25px; border-radius: 50px; font-weight: bold; 
-                    z-index: 20000; border: 1px solid rgba(255,255,255,0.3);
-                                box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
-                }
-        
-                /* গ্লাস ইফেক্ট কার্ড */
-                .container {
-                                position: relative; 
-                    background: rgba(255, 255, 255, 0.12);
-                                backdrop-filter: blur(15px);
-                                -webkit-backdrop-filter: blur(15px);
-                                padding: 85px 20px 30px;
-                                border-radius: 35px; 
-                    max-width: 380px; width: 92%; 
-                    text-align: center;
-                                border: 1px solid rgba(255, 255, 255, 0.2);
-                                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-                                z-index: 100;
-                                margin-bottom: 40px;
-                }
-        
-                .main-logo { 
-                    width: 130px; height: 130px; border-radius: 50%; 
-                    border: 4px solid #2ecc71; position: absolute; 
-                    top: -65px; left: 50%; transform: translateX(-50%); 
-                    background: #fff; z-index: 101;
-                }
-        
-                h1 { color: #fff; font-size: 24px; margin-bottom: 5px; }
-                .doctor-name { color: #2ecc71; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
-        
-                .address-box { 
-                    background: rgba(255, 255, 255, 0.1); 
-                    padding: 15px; border-radius: 15px; text-align: left; 
-                    border-left: 4px solid #2ecc71; color: #eee; font-size: 14px;
-                }
-        
-                .u-input { 
-                    width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; 
-                    border: none; background: rgba(255,255,255,0.9); outline: none; color: #000;
-                }
-        
-                .submit-btn { 
-                    width: 100%; padding: 14px; background: #2ecc71; color: white; 
-                    border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
-                }
-        
-                #secret-contact { display: none; margin-top: 20px; }
-                .call-btn { 
-                    display: inline-block; background: #27ae60; color: white; 
-                    padding: 12px 30px; border-radius: 10px; text-decoration: none; 
-                    font-weight: bold; margin-top: 10px; 
-                }
-        
-                .footer-img { width: 92%; max-width: 400px; border-radius: 20px; z-index: 10; opacity: 0.9; margin-top: 20px; }
-                
-                /* গেম অবজেক্টস */
-                .game-item { position: fixed; z-index: 50; cursor: pointer; font-size: 45px; pointer-events: auto; }
-                
-                @keyframes snakeRun {
-                                0% { left: -100px; top: var(--y); }
-                                100% { left: 110vw; top: var(--y); }
-                }
-            /* রোগের তালিকায় গ্লাস ইফেক্ট স্টাইল */
-        .disease-container {<div class="price-container">
-                                <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 20px;">চিকিৎসা ও সম্ভাব্য খরচ</h2>
-                                <div class="price-grid">
-                                    <div class="price-card"><span>দাঁত তোলা</span> <b>৫০০ - ১,৫০০৳</b></div>
-                                    <div class="price-card"><span>দাঁত স্কেলিং</span> <b>১,০০০ - ২,৫০০৳</b></div>
-                                    <div class="price-card"><span>ফিলিং (প্রতি দাঁত)</span> <b>৮০০ - ২,০০০৳</b></div>
-                                    <div class="price-card"><span>রুট ক্যানেল</span> <b>৩,৫০০ - ৮,০০০৳</b></div>
-                                    <div class="price-card"><span>দাঁতের ক্যাপ (প্রতিটি)</span> <b>৪,০০০ - ১৫,০০০৳</b></div>
-                                    <div class="price-card"><span>দাঁত বাঁধানো (সেট)</span> <b>১৫,০০০ - ৩০,০০০৳</b></div>
-                                    <div class="price-card"><span>ব্রেসেস (পুরো মুখ)</span> <b>৪০,০০০ - ১,২০,০০০৳</b></div>
-                                    <div class="price-card"><span>সার্জারি (আক্কেল দাঁত)</span> <b>৩,০০০ - ১০,০০০৳</b></div>
-                                </div>
-                                <p style="color: #bbb; font-size: 11px; margin-top: 10px;">* খরচ চিকিৎসার ধরন ও জটিলতার ওপর নির্ভর করে কম-বেশি হতে পারে।</p>
-                            </div>
-                            
-                                width: 92%;
-                                max-width: 380px;
-                                margin: 20px 0;
-                                padding: 20px;
-                                background: rgba(255, 255, 255, 0.08); /* খুব হালকা সাদা */
-            backdrop-filter: blur(12px); /* কাঁচের মতো ঝাপসা ইফেক্ট */
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        /* গ্লাস ইফেক্ট কার্ড */
+        .container {
+            position: relative; 
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 85px 20px 30px;
+            border-radius: 35px; 
+            max-width: 380px; width: 92%; 
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             z-index: 100;
-            }
-        
-        .disease-grid {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 10px;
-            }
-        
-        .disease-card {
-                background: rgba(255, 255, 255, 0.05);
-                padding: 10px;
-                border-radius: 12px;
-                color: #ffffff;
-                font-size: 14px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
         }
-        </style>
-    </head>
+
+        .main-logo { 
+            width: 130px; height: 130px; border-radius: 50%; 
+            border: 4px solid #2ecc71; position: absolute; 
+            top: -65px; left: 50%; transform: translateX(-50%); 
+            background: #fff; z-index: 101;
+        }
+
+        h1 { color: #fff; font-size: 24px; margin-bottom: 5px; }
+        .doctor-name { color: #2ecc71; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
+
+        .address-box { 
+            background: rgba(255, 255, 255, 0.1); 
+            padding: 15px; border-radius: 15px; text-align: left; 
+            border-left: 4px solid #2ecc71; color: #eee; font-size: 14px;
+        }
+
+        .u-input { 
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; 
+            border: none; background: rgba(255,255,255,0.9); outline: none; color: #000;
+        }
+
+        .submit-btn { 
+            width: 100%; padding: 14px; background: #2ecc71; color: white; 
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
+        }
+
+        #secret-contact { display: none; margin-top: 20px; }
+        .call-btn { 
+            display: inline-block; background: #27ae60; color: white; 
+            padding: 12px 30px; border-radius: 10px; text-decoration: none; 
+            font-weight: bold; margin-top: 10px; 
+        }
+
+        .footer-img { width: 92%; max-width: 400px; border-radius: 20px; z-index: 10; opacity: 0.9; margin-top: 20px; }
+        
+        /* গেম অবজেক্টস */
+        .game-item { position: fixed; z-index: 50; cursor: pointer; font-size: 45px; pointer-events: auto; }
+        
+        @keyframes snakeRun {
+            0% { left: -100px; top: var(--y); }
+            100% { left: 110vw; top: var(--y); }
+        }
+    /* রোগের তালিকায় গ্লাস ইফেক্ট স্টাইল */
+.disease-container {<div class="price-container">
+    <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 20px;">চিকিৎসা ও সম্ভাব্য খরচ</h2>
+    <div class="price-grid">
+        <div class="price-card"><span>দাঁত তোলা</span> <b>৫০০ - ১,৫০০৳</b></div>
+        <div class="price-card"><span>দাঁত স্কেলিং</span> <b>১,০০০ - ২,৫০০৳</b></div>
+        <div class="price-card"><span>ফিলিং (প্রতি দাঁত)</span> <b>৮০০ - ২,০০০৳</b></div>
+        <div class="price-card"><span>রুট ক্যানেল</span> <b>৩,৫০০ - ৮,০০০৳</b></div>
+        <div class="price-card"><span>দাঁতের ক্যাপ (প্রতিটি)</span> <b>৪,০০০ - ১৫,০০০৳</b></div>
+        <div class="price-card"><span>দাঁত বাঁধানো (সেট)</span> <b>১৫,০০০ - ৩০,০০০৳</b></div>
+        <div class="price-card"><span>ব্রেসেস (পুরো মুখ)</span> <b>৪০,০০০ - ১,২০,০০০৳</b></div>
+        <div class="price-card"><span>সার্জারি (আক্কেল দাঁত)</span> <b>৩,০০০ - ১০,০০০৳</b></div>
+    </div>
+    <p style="color: #bbb; font-size: 11px; margin-top: 10px;">* খরচ চিকিৎসার ধরন ও জটিলতার ওপর নির্ভর করে কম-বেশি হতে পারে।</p>
+</div>
+
+    width: 92%;
+    max-width: 380px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08); /* খুব হালকা সাদা */
+    backdrop-filter: blur(12px); /* কাঁচের মতো ঝাপসা ইফেক্ট */
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    z-index: 100;
+}
+
+.disease-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.disease-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+</style>
+</head>
 <body>
 
-        <canvas id="canvas"></canvas>canvas>
-        <div id="score-board">স্কোর: <span id="score">0</span>span></div>div>
+    <canvas id="canvas"></canvas>
+    <div id="score-board">স্কোর: <span id="score">0</span></div>
 
-        <div class="container">
-                    <img src="IMG-20260201-WA0000.jpg" alt="Logo" class="main-logo">
-                    <h1>Naz Dental Care</h1>
-                <p class="doctor-name">ডাঃ ফাইরুজ হাফিজা হুমা</p>p>
-                
-                <div class="address-box">
-                            <p>?? <b>ঠিকানা:</b> ৪০৫ ঘাটান্দি, ভূয়াপুর, টাঙ্গাইল।</p>
-                            <p>?? <b>সময়:</b> সকাল ১০টা - রাত ৮টা</p>
-                </div>div>
+    <div class="container">
+        <img src="IMG-20260201-WA0000.jpg" alt="Logo" class="main-logo">
+        <h1>Naz Dental Care</h1>
+        <p class="doctor-name">ডাঃ ফাইরুজ হাফিজা হুমা</p>
         
-                <div id="form-container">
-                            <input type="text" id="u-name" class="u-input" placeholder="আপনার নাম">
-                            <input type="tel" id="u-mobile" class="u-input" placeholder="মোবাইল নম্বর">
-                            <button class="submit-btn" onclick="revealNumber()">নম্বর দেখুন</button>button>
-                </div>div>
-        
-                <div id="secret-contact">
-                            <p style="color: #2ecc71; font-weight: bold;">তথ্য সংরক্ষিত হয়েছে।</p>
-                            <p style="color: white; font-size: 18px; margin-top: 10px;">?? ০১৭৯১-৫৬১৭৯৫</p>
-                            <a href="tel:+8801791561795" class="call-btn">সরাসরি কল করুন</a>a>
-                </div>div>
-        </div>div>
+        <div class="address-box">
+            <p>📍 <b>ঠিকানা:</b> ৪০৫ ঘাটান্দি, ভূয়াপুর, টাঙ্গাইল।</p>
+            <p>🕒 <b>সময়:</b> সকাল ১০টা - রাত ৮টা</p>
+        </div>
+
+        <div id="form-container">
+            <input type="text" id="u-name" class="u-input" placeholder="আপনার নাম">
+            <input type="tel" id="u-mobile" class="u-input" placeholder="মোবাইল নম্বর">
+            <button class="submit-btn" onclick="revealNumber()">নম্বর দেখুন</button>
+        </div>
+
+        <div id="secret-contact">
+            <p style="color: #2ecc71; font-weight: bold;">তথ্য সংরক্ষিত হয়েছে।</p>
+            <p style="color: white; font-size: 18px; margin-top: 10px;">📞 ০১৭৯১-৫৬১৭৯৫</p>
+            <a href="tel:+8801791561795" class="call-btn">সরাসরি কল করুন</a>
+        </div>
+    </div>
 
     <img src="IMG-20260131-WA0001.jpg" alt="Banner" class="footer-img"><div class="disease-container">
-        <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 20px;">আমাদের সেবা ও চিকিৎসা</h2>
-        <div class="disease-grid">
-                <div class="disease-card">দাঁতে ব্যথা</div>div>
-                <div class="disease-card">দাঁত ক্ষয়</div>div>
-                <div class="disease-card">মাড়ি থেকে রক্ত পড়া</div>div>
-                <div class="disease-card)দাঁত শিরশির করা</div>
-                            <div class="disease-card">দাঁতের পাথর পরিষ্কার</div>
-                <div class="disease-card">রুট ক্যানেল</div>div>
-        </div>div>
-    </div>div>
+    <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 20px;">আমাদের সেবা ও চিকিৎসা</h2>
+    <div class="disease-grid">
+        <div class="disease-card">দাঁতে ব্যথা</div>
+        <div class="disease-card">দাঁত ক্ষয়</div>
+        <div class="disease-card">মাড়ি থেকে রক্ত পড়া</div>
+        <div class="disease-card)দাঁত শিরশির করা</div>
+        <div class="disease-card">দাঁতের পাথর পরিষ্কার</div>
+        <div class="disease-card">রুট ক্যানেল</div>
+    </div>
+</div>
 
-    <div style="height: 100px;"></div>div>
+    <div style="height: 100px;"></div>
 
     <script>
-                // --- Glowing Tubes Logic ---
-                const canvas = document.getElementById('canvas');
-                const ctx = canvas.getContext('2d');
-                let points = [];
+        // --- Glowing Tubes Logic ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let points = [];
 
-                function resize() {
-                                canvas.width = window.innerWidth;
-                                canvas.height = window.innerHeight;
-                }
-                window.addEventListener('resize', resize);
-                resize();
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-                class Particle {
-                                constructor(x, y) {
-                                                    this.x = x; this.y = y;
-                                                    this.color = `hsl(${Math.random() * 60 + 100}, 100%, 50%)`;
-                                                    this.life = 100;
-                                                    this.speedX = Math.random() * 2 - 1;
-                                                    this.speedY = Math.random() * 2 - 1;
-                                }
-                                update() { this.x += this.speedX; this.y += this.speedY; this.life -= 2.5; }
-                }
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.color = `hsl(${Math.random() * 60 + 100}, 100%, 50%)`;
+                this.life = 100;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 2.5; }
+        }
 
-                function handleInteraction(e) {
-                                const x = e.touches ? e.touches[0].clientX : e.clientX;
-                                const y = e.touches ? e.touches[0].clientY : e.clientY;
-                                for(let i=0; i<3; i++) points.push(new Particle(x, y));
-                }
-                window.addEventListener('mousemove', handleInteraction);
-                window.addEventListener('touchstart', handleInteraction, {passive: true});
-                window.addEventListener('touchmove', handleInteraction, {passive: true});
+        function handleInteraction(e) {
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+            for(let i=0; i<3; i++) points.push(new Particle(x, y));
+        }
+        window.addEventListener('mousemove', handleInteraction);
+        window.addEventListener('touchstart', handleInteraction, {passive: true});
+        window.addEventListener('touchmove', handleInteraction, {passive: true});
 
-                function animate() {
-                                ctx.fillStyle = 'rgba(0,0,0,0.15)';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                for(let i=0; i<points.length; i++) {
-                                                    points[i].update();
-                                                    ctx.beginPath();
-                                                    ctx.fillStyle = points[i].color;
-                                                    ctx.arc(points[i].x, points[i].y, 2, 0, Math.PI*2);
-                                                    ctx.fill();
-                                                    if(points[i].life <= 0) { points.splice(i,1); i--; }
-                                }
-                                requestAnimationFrame(animate);
-                }
-                animate();
+        function animate() {
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for(let i=0; i<points.length; i++) {
+                points[i].update();
+                ctx.beginPath();
+                ctx.fillStyle = points[i].color;
+                ctx.arc(points[i].x, points[i].y, 2, 0, Math.PI*2);
+                ctx.fill();
+                if(points[i].life <= 0) { points.splice(i,1); i--; }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
 
-                // --- Game Logic ---
-                let score = 0;
-                let snakeStarted = false;
+        // --- Game Logic ---
+        let score = 0;
+        let snakeStarted = false;
 
-                function updateScore(p) { 
-                                score += p; 
-                                document.getElementById('score').innerText = score; 
-                                if(score >= 10 && !snakeStarted) {
-                                                    snakeStarted = true;
-                                                    startSnakes();
-                                }
-                }
+        function updateScore(p) { 
+            score += p; 
+            document.getElementById('score').innerText = score; 
+            if(score >= 10 && !snakeStarted) {
+                snakeStarted = true;
+                startSnakes();
+            }
+        }
 
-                // বাবল এবং দাঁত অনেক বাড়িয়ে দেওয়া হয়েছে
-                function createGameItem(type) {
-                                const item = document.createElement('div');
-                                item.className = 'game-item';
-                                item.innerHTML = type === 'tooth' ? '??' : '??';
-                                item.style.left = Math.random() * 85 + 'vw';
-                                item.style.top= '-60px';
-                                item.style.transition = `top ${Math.random() * 2 + 3}s linear`;
-                                document.body.appendChild(item);
+        // বাবল এবং দাঁত অনেক বাড়িয়ে দেওয়া হয়েছে
+        function createGameItem(type) {
+            const item = document.createElement('div');
+            item.className = 'game-item';
+            item.innerHTML = type === 'tooth' ? '🦷' : '🟢';
+            item.style.left = Math.random() * 85 + 'vw';
+            item.style.top= '-60px';
+            item.style.transition = `top ${Math.random() * 2 + 3}s linear`;
+            document.body.appendChild(item);
+            
+            setTimeout(() => item.style.top = '110vh', 100);
+            
+            item.onclick = () => { 
+                updateScore(type === 'tooth' ? 5 : 2); 
+                item.remove(); 
+            };
+            setTimeout(() => item.remove(), 5500);
+        }
 
-                                setTimeout(() => item.style.top = '110vh', 100);
+        // সাপ তৈরির ফাংশন
+        function createSnake() {
+            const snake = document.createElement('div');
+            snake.className = 'game-item';
+            snake.innerHTML = '🐍';
+            snake.style.setProperty('--y', Math.random() * 80 + 10 + 'vh');
+            snake.style.animation = `snakeRun ${Math.random() * 2 + 2}s linear forwards`;
+            document.body.appendChild(snake);
 
-                                item.onclick = () => { 
-                                                    updateScore(type === 'tooth' ? 5 : 2); 
-                                                    item.remove(); 
-                                };
-                                setTimeout(() => item.remove(), 5500);
-                }
+            snake.onclick = () => { updateScore(10); snake.remove(); };
+            setTimeout(() => snake.remove(), 4500);
+        }
 
-                // সাপ তৈরির ফাংশন
-                function createSnake() {
-                                const snake = document.createElement('div');
-                                snake.className = 'game-item';
-                                snake.innerHTML = '??';
-                                snake.style.setProperty('--y', Math.random() * 80 + 10 + 'vh');
-                                snake.style.animation = `snakeRun ${Math.random() * 2 + 2}s linear forwards`;
-                                document.body.appendChild(snake);
+        // আইটেম জেনারেশন ইন্টারভাল
+        setInterval(() => createGameItem('bubble'), 800); // প্রতি ০.৮ সেকেন্ডে বাবল
+        setInterval(() => createGameItem('tooth'), 1500); // প্রতি ১.৫ সেকেন্ডে দাঁত
 
-                                snake.onclick = () => { updateScore(10); snake.remove(); };
-                                setTimeout(() => snake.remove(), 4500);
-                }
+        function startSnakes() {
+            setInterval(createSnake, 1200); // প্রতি ১.২ সেকেন্ডে সাপ আসবে
+        }
 
-                // আইটেম জেনারেশন ইন্টারভাল
-                setInterval(() => createGameItem('bubble'), 800); // প্রতি ০.৮ সেকেন্ডে বাবল
-                setInterval(() => createGameItem('tooth'), 1500); // প্রতি ১.৫ সেকেন্ডে দাঁত
-
-                function startSnakes() {
-                                setInterval(createSnake, 1200); // প্রতি ১.২ সেকেন্ডে সাপ আসবে
-                }
-
-                function revealNumber() {
-                                const n = document.getElementById('u-name').value;
-                                const m = document.getElementById('u-mobile').value;
-                                if(n.length > 2 && m.length > 10) {
-                                                    document.getElementById('form-container').style.display = "none";
-                                                    document.getElementById('secret-contact').style.display = "block";
-                                } else { alert("সঠিক নাম ও নম্বর দিন।"); }
-                }
+        function revealNumber() {
+            const n = document.getElementById('u-name').value;
+            const m = document.getElementById('u-mobile').value;
+            if(n.length > 2 && m.length > 10) {
+                document.getElementById('form-container').style.display = "none";
+                document.getElementById('secret-contact').style.display = "block";
+            } else { alert("সঠিক নাম ও নম্বর দিন।"); }
+        }
     </script>
-    <div class="dental-scroll-container">
-            <div class="dental-blur-bg"></div>div>
-            <div class="dental-ticker">
-                        <div class="ticker-content">
-                                        <img src="your-logo.png" alt="Logo" class="mini-logo">
-                                        <span>রুট ক্যানেল</span> |
-                                    <span>দাঁত বাঁধানো</span> |
-                                    <span>স্কেলিং</span> |
-                                    <span>দাঁত তোলা</span> |
-                                    <span>ব্রেসেস</span> |
-                                    <span>ডেন্টাল ইমপ্ল্যান্ট</span> |
-                                    <img src="your-logo.png" alt="Logo" class="mini-logo">
-                                    <span>রুট ক্যানেল</span> |
-                                    <span>দাঁত বাঁধানো</span> |
-                                    <span>স্কেলিং</span> |
-                                    <span>দাঁত তোলা</span> |
-                                    <span>ব্রেসেস</span>
-                        </div>div>
-            </div>div>
-    </div>div>
+<div class="dental-scroll-container">
+    <div class="dental-blur-bg"></div>
+    <div class="dental-ticker">
+        <div class="ticker-content">
+            <img src="your-logo.png" alt="Logo" class="mini-logo">
+            <span>রুট ক্যানেল</span> |
+            <span>দাঁত বাঁধানো</span> |
+            <span>স্কেলিং</span> |
+            <span>দাঁত তোলা</span> |
+            <span>ব্রেসেস</span> |
+            <span>ডেন্টাল ইমপ্ল্যান্ট</span> |
+            <img src="your-logo.png" alt="Logo" class="mini-logo">
+            <span>রুট ক্যানেল</span> |
+            <span>দাঁত বাঁধানো</span> |
+            <span>স্কেলিং</span> |
+            <span>দাঁত তোলা</span> |
+            <span>ব্রেসেস</span>
+        </div>
+    </div>
+</div>
 
 <style>
 .dental-scroll-container {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        padding: 15px 0;
-        background: rgba(255, 255, 255, 0.2); /* হালকা ব্যাকগ্রাউন্ড */
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 0;
+    background: rgba(255, 255, 255, 0.2); /* হালকা ব্যাকগ্রাউন্ড */
 }
 
 /* ব্লার বা ঝাপসা ইফেক্ট */
 .dental-blur-bg {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 1;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1;
 }
 
 .dental-ticker {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        white-space: nowrap;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    white-space: nowrap;
 }
 
 .ticker-content {
-        display: inline-block;
-        animation: scroll-left 20s linear infinite;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
+    display: inline-block;
+    animation: scroll-left 20s linear infinite;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 
 .mini-logo {
-        height: 25px;
-        vertical-align: middle;
-        margin: 0 10px;
+    height: 25px;
+    vertical-align: middle;
+    margin: 0 10px;
 }
 
 /* স্ক্রলিং অ্যানিমেশন */
 @keyframes scroll-left {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .ticker-content span {
-        margin: 0 15px;
+    margin: 0 15px;
 }
 </style>
 <div class="dental-scroll-container">
-    <div class="dental-blur-bg"></div>div>
+    <div class="dental-blur-bg"></div>
     <div class="dental-ticker">
-            <div class="ticker-content">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" class="mini-logo">
-                        <span>দাঁত স্কেলিং ও পলিশিং: ৫০০ - ১৫০০ টাকা</span> |
-                        <span>রুট ক্যানেল (প্রতি দাঁত): ৩০০০ - ৫০০০ টাকা</span> |
-                        <span>দাঁত ফিলিং: ৮০০ - ২০০০ টাকা</span> |
-                        <span>স্থায়ী দাঁত বাঁধানো: ৫০০০ - ১৫০০০ টাকা</span> |
-                        <span>দাঁত তোলা: ৫০০ - ২০০০ টাকা</span> |
-                        <span>ব্রেসেস (আঁকাবাঁকা দাঁত): ৪০,০০০ - ৮০,০০০ টাকা</span> |
-                        <span>ডেন্টাল ইমপ্ল্যান্ট: ৩০,০০০ - ৬০,০০০ টাকা</span> |
-                        <span>দাঁত সাদা করা (Whitening): ১০০০০ - ১৫০০০ টাকা</span> |
-                        
-                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" class="mini-logo">
-                        <span>দাঁত স্কেলিং ও পলিশিং: ৫০০ - ১৫০০ টাকা</span> |
-                        <span>রুট ক্যানেল: ৩০০০ - ৫০০০ টাকা</span> |
-                        <span>দাঁত ফিলিং: ৮০০ - ২০০০ টাকা</span> |
-                        <span>স্থায়ী দাঁত বাঁধানো: ৫০০০ - ১৫০০০ টাকা</span> |
-                        <span>দাঁত তোলা: ৫০০ - ২০০০ টাকা</span> |
-                        <span>ব্রেসেস: ৪০,০০০ - ৮০,০০০ টাকা</span>
-            </div>div>
-    </div>div>
-</div>div>
+        <div class="ticker-content">
+            <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" class="mini-logo">
+            <span>দাঁত স্কেলিং ও পলিশিং: ৫০০ - ১৫০০ টাকা</span> |
+            <span>রুট ক্যানেল (প্রতি দাঁত): ৩০০০ - ৫০০০ টাকা</span> |
+            <span>দাঁত ফিলিং: ৮০০ - ২০০০ টাকা</span> |
+            <span>স্থায়ী দাঁত বাঁধানো: ৫০০০ - ১৫০০০ টাকা</span> |
+            <span>দাঁত তোলা: ৫০০ - ২০০০ টাকা</span> |
+            <span>ব্রেসেস (আঁকাবাঁকা দাঁত): ৪০,০০০ - ৮০,০০০ টাকা</span> |
+            <span>ডেন্টাল ইমপ্ল্যান্ট: ৩০,০০০ - ৬০,০০০ টাকা</span> |
+            <span>দাঁত সাদা করা (Whitening): ১০০০০ - ১৫০০০ টাকা</span> |
+            
+            <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" class="mini-logo">
+            <span>দাঁত স্কেলিং ও পলিশিং: ৫০০ - ১৫০০ টাকা</span> |
+            <span>রুট ক্যানেল: ৩০০০ - ৫০০০ টাকা</span> |
+            <span>দাঁত ফিলিং: ৮০০ - ২০০০ টাকা</span> |
+            <span>স্থায়ী দাঁত বাঁধানো: ৫০০০ - ১৫০০০ টাকা</span> |
+            <span>দাঁত তোলা: ৫০০ - ২০০০ টাকা</span> |
+            <span>ব্রেসেস: ৪০,০০০ - ৮০,০০০ টাকা</span>
+        </div>
+    </div>
+</div>
 
 <style>
 /* পুরো কন্টেইনারের স্টাইল */
 .dental-scroll-container {
-        position: fixed; /* এটি স্ক্রিনের নিচে আটকে থাকবে */
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        padding: 12px 0;
-        z-index: 9999;
-        background: rgba(255, 255, 255, 0.15); /* ঝাপসা কাঁচের মতো ব্যাকগ্রাউন্ড */
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    position: fixed; /* এটি স্ক্রিনের নিচে আটকে থাকবে */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    padding: 12px 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.15); /* ঝাপসা কাঁচের মতো ব্যাকগ্রাউন্ড */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
 }
 
 /* ব্লার বা ঝাপসা ইফেক্ট */
 .dental-blur-bg {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        z-index: -1;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: -1;
 }
 
 .dental-ticker {
-        display: flex;
-        white-space: nowrap;
+    display: flex;
+    white-space: nowrap;
 }
 
 .ticker-content {
-        display: inline-block;
-        animation: scroll-left 35s linear infinite; /* ৩০-৩৫ সেকেন্ড দিলে আস্তে স্ক্রল হবে */
-        font-size: 16px;
-        font-family: 'Arial', sans-serif;
-        color: #004d40; /* ডার্ক গ্রিন টাইপ কালার */
-        font-weight: 600;
+    display: inline-block;
+    animation: scroll-left 35s linear infinite; /* ৩০-৩৫ সেকেন্ড দিলে আস্তে স্ক্রল হবে */
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    color: #004d40; /* ডার্ক গ্রিন টাইপ কালার */
+    font-weight: 600;
 }
 
 .mini-logo {
-        height: 20px;
-        width: 20px;
-        vertical-align: middle;
-        margin: 0 15px;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    margin: 0 15px;
 }
 
 .ticker-content span {
-        margin: 0 15px;
+    margin: 0 15px;
 }
 
 /* স্ক্রলিং অ্যানিমেশন */
 @keyframes scroll-left {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 /* মাউস নিলে স্ক্রল থেমে যাবে */
 .dental-scroll-container:hover .ticker-content {
-        animation-play-state: paused;
+    animation-play-state: paused;
 }
 <div class="dental-scroll-container">
     <div class="dental-blur-bg"></div>
@@ -507,216 +507,213 @@
 
 <style>
 .dental-scroll-container {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        padding: 15px 0;
-        background: rgba(255, 255, 255, 0.2); /* হালকা ব্যাকগ্রাউন্ড */
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 0;
+    background: rgba(255, 255, 255, 0.2); /* হালকা ব্যাকগ্রাউন্ড */
 }
 
 /* ব্লার বা ঝাপসা ইফেক্ট */
 .dental-blur-bg {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 1;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1;
 }
 
 .dental-ticker {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        white-space: nowrap;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    white-space: nowrap;
 }
 
 .ticker-content {
-        display: inline-block;
-        animation: scroll-left 20s linear infinite;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
+    display: inline-block;
+    animation: scroll-left 20s linear infinite;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 
 .mini-logo {
-        height: 25px;
-        vertical-align: middle;
-        margin: 0 10px;
+    height: 25px;
+    vertical-align: middle;
+    margin: 0 10px;
 }
 
 /* স্ক্রলিং অ্যানিমেশন */
 @keyframes scroll-left {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .ticker-content span {
-        margin: 0 15px;
+    margin: 0 15px;
 }
 </style>
 </style>
 <div class="dental-static-list">
-    <div class="dental-glass-effect"></div>div>
+    <div class="dental-glass-effect"></div>
     <div class="dental-list-container">
-            <h2 class="dental-heading">?? আমাদের চিকিৎসা এবং মূল্যতালিকা</h2>
+        <h2 class="dental-heading">🦷 আমাদের চিকিৎসা এবং মূল্যতালিকা</h2>
+        
+        <div class="dental-grid">
+            <div class="dental-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
+                <div class="info">
+                    <p class="name">দাঁত স্কেলিং ও পলিশিং</p>
+                    <p class="price">৫০০ - ১,৫০০ টাকা</p>
+                </div>
+            </div>
+
+            <div class="dental-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
+                <div class="info">
+                    <p class="name">রুট ক্যানেল ট্রিটমেন্ট</p>
+                    <p class="price">৩,০০০ - ৫,০০০ টাকা</p>
+                </div>
+            </div>
+
+            <div class="dental-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
+                <div class="info">
+                    <p class="name">লেজার ডেন্টাল ফিলিং</p>
+                    <p class="price">১,০০০ - ২,৫০০ টাকা</p>
+                </div>
+            </div>
+
+            <div class="dental-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
+                <div class="info">
+                    <p class="name">স্থায়ী দাঁত বাঁধানো</p>
+                    <p class="price">৪,০০০ - ১২,০০০ টাকা</p>
+                </div>
+            </div>
             
-            <div class="dental-grid">
-                        <div class="dental-card">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
-                                        <div class="info">
-                                                            <p class="name">দাঁত স্কেলিং ও পলিশিং</p>
-                                                            <p class="price">৫০০ - ১,৫০০ টাকা</p>
-                                        </div>div>
-                        </div>div>
-            
-                        <div class="dental-card">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
-                                        <div class="info">
-                                                            <p class="name">রুট ক্যানেল ট্রিটমেন্ট</p>
-                                                            <p class="price">৩,০০০ - ৫,০০০ টাকা</p>
-                                        </div>div>
-                        </div>div>
-            
-                        <div class="dental-card">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
-                                        <div class="info">
-                                                            <p class="name">লেজার ডেন্টাল ফিলিং</p>
-                                                            <p class="price">১,০০০ - ২,৫০০ টাকা</p>
-                                        </div>div>
-                        </div>div>
-            
-                        <div class="dental-card">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
-                                        <div class="info">
-                                                            <p class="name">স্থায়ী দাঁত বাঁধানো</p>
-                                                            <p class="price">৪,০০০ - ১২,০০০ টাকা</p>
-                                        </div>div>
-                        </div>div>
-                        
-                        <div class="dental-card">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
-                                        <div class="info">
-                                                            <p class="name">ব্রেসেস (আঁকাবাঁকা দাঁত)</p>
-                                                            <p class="price">৪০,০০০ - ৮০,০০০ টাকা</p>
-                                        </div>div>
-                        </div>div>
-            </div>div>
-    </div>div>
-</div>div>
+            <div class="dental-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3467/3467832.png" alt="Logo">
+                <div class="info">
+                    <p class="name">ব্রেসেস (আঁকাবাঁকা দাঁত)</p>
+                    <p class="price">৪০,০০০ - ৮০,০০০ টাকা</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
 /* মূল কন্টেইনার */
 .dental-static-list {
-        position: relative;
-        width: 100%;
-        padding: 60px 0;
-        margin-top: 40px;
-        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); /* হালকা সবুজ গ্রেডিয়েন্ট */
-        border-top: 4px solid #4caf50;
+    position: relative;
+    width: 100%;
+    padding: 60px 0;
+    margin-top: 40px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); /* হালকা সবুজ গ্রেডিয়েন্ট */
+    border-top: 4px solid #4caf50;
 }
 
 /* ঝাপসা ইফেক্ট */
 .dental-glass-effect {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.2);
-        z-index: 1;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 1;
 }
 
 .dental-list-container {
-        position: relative;
-        z-index: 2;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 0 20px;
-        font-family: 'Arial', sans-serif;
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: 'Arial', sans-serif;
 }
 
 .dental-heading {
-        text-align: center;
-        color: #1b5e20;
-        margin-bottom: 40px;
-        font-size: 26px;
+    text-align: center;
+    color: #1b5e20;
+    margin-bottom: 40px;
+    font-size: 26px;
 }
 
 /* গ্রিড লেআউট (এক সারিতে দুইটা করে দেখাবে) */
 .dental-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
 .dental-card {
-        background: white;
-        display: flex;
-        align-items: center;
+    background: white;
+    display: flex;
+    align-items: center;
     padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border-left: 5px solid #4caf50;
-        transition: transform 0.3s;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-left: 5px solid #4caf50;
+    transition: transform 0.3s;
 }
 
 .dental-card:hover {
-        transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .dental-card img {
-        width: 45px;
-        height: 45px;
-        margin-right: 20px;
+    width: 45px;
+    height: 45px;
+    margin-right: 20px;
 }
 
 .dental-card .name {
-        margin: 0;
-        font-weight: bold;
-        color: #333;
-        font-size: 17px;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+    font-size: 17px;
 }
 
 .dental-card .price {
-        margin: 5px 0 0;
-        color: #2e7d32;
-        font-weight: 600;
+    margin: 5px 0 0;
+    color: #2e7d32;
+    font-weight: 600;
 }
 
 /* মোবাইল রেসপন্সিভ */
 @media (max-width: 600px) {
-        .dental-grid {
-                    grid-template-columns: 1fr;
-        }
+    .dental-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 <div style="display: block !important; visibility: visible !important; position: relative; z-index: 9999; margin: 20px; padding: 30px; background-color: #111827; border: 2px solid #3b82f6; border-radius: 15px; color: #ffffff; font-family: Arial, sans-serif;">
     
     <h2 style="color: #60a5fa; font-size: 24px; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; margin-top: 0;">
-            ??‍⚕️ Official Medical Advice
+        👨‍⚕️ Official Medical Advice
     </h2>
 
     <div style="margin-top: 20px;">
-            <h3 style="color: #fbbf24; font-size: 18px;">• Nutrition & Diet</h3>
-            <p style="color: #e5e7eb; line-height: 1.6;">Focus on a balanced diet rich in fiber and lean proteins. Avoid processed sugars and maintain consistent hydration by drinking 8-10 glasses of water daily.</p>
-    </div>div>
+        <h3 style="color: #fbbf24; font-size: 18px;">• Nutrition & Diet</h3>
+        <p style="color: #e5e7eb; line-height: 1.6;">Focus on a balanced diet rich in fiber and lean proteins. Avoid processed sugars and maintain consistent hydration by drinking 8-10 glasses of water daily.</p>
+    </div>
 
     <div style="margin-top: 20px;">
-            <h3 style="color: #fbbf24; font-size: 18px;">• Physical Movement</h3>
-            <p style="color: #e5e7eb; line-height: 1.6;">Engage in at least 30 minutes of physical activity five days a week. Regular exercise strengthens the cardiovascular system and boosts mental health.</p>
-    </div>div>
+        <h3 style="color: #fbbf24; font-size: 18px;">• Physical Movement</h3>
+        <p style="color: #e5e7eb; line-height: 1.6;">Engage in at least 30 minutes of physical activity five days a week. Regular exercise strengthens the cardiovascular system and boosts mental health.</p>
+    </div>
 
     <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-            <p style="font-style: italic; margin: 0; color: #9ca3af;">
-                "Prioritize your health today. Prevention is always more effective than cure. Listen to your body’s signals."
-            </p>
-    </div>div>
+        <p style="font-style: italic; margin: 0; color: #9ca3af;">
+            "Prioritize your health today. Prevention is always more effective than cure. Listen to your body’s signals."
+        </p>
+    </div>
 
     <p style="font-size: 12px; color: #6b7280; margin-top: 20px; border-top: 1px solid #374151; padding-top: 10px;">
         <strong>Disclaimer:</strong> This is for educational purposes. Consult a doctor for personal medical concerns.
     </p>
-</div>div>
+</div>
 </body>
-</html>html></strong></span></span>
-    </script></b></b></p></h1>
-</body></style></title>
-    </head>
+</html>
