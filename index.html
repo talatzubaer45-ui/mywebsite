@@ -4,7 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Naz Dental Care - Extreme Game Mode</title>
-    <style>/* প্রাইজ কার্ড গ্লাস ইফেক্ট */
+    <style>/* Image Editor Panel (Tweakpane) */
+.tp-container{
+    position: fixed;
+    top: 80px;
+    right: 15px;
+    z-index: 30000;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* Image draw on canvas */
+#canvas{
+    cursor: crosshair;
+}
+/* প্রাইজ কার্ড গ্লাস ইফেক্ট */
 .price-container {
     width: 92%;
     max-width: 380px;
@@ -176,6 +193,23 @@
     font-size: 14px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+/* Image Editor Panel (Tweakpane) */
+.tp-container{
+    position: fixed;
+    top: 80px;
+    right: 15px;
+    z-index: 30000;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* Image draw on canvas */
+#canvas{
+    cursor: crosshair;
 }
 </style>
 </head>
@@ -715,5 +749,59 @@
         <strong>Disclaimer:</strong> This is for educational purposes. Consult a doctor for personal medical concerns.
     </p>
 </div>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+
+<div class="tp-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.9/dist/tweakpane.min.js"></script>
+
+<script>
+/* ---------- Image + Tweakpane Upgrade ---------- */
+
+const pane = new Tweakpane.Pane({
+    container: document.querySelector('.tp-container'),
+    title: 'Image Control'
+});
+
+const settings = {
+    brightness: 1,
+    contrast: 1,
+    scale: 1,
+    rotate: 0,
+    upload: () => document.getElementById('fileInput').click()
+};
+
+pane.addButton({ title: 'Upload Image' }).on('click', settings.upload);
+pane.addInput(settings, 'brightness', { min: 0, max: 2, step: 0.01 });
+pane.addInput(settings, 'contrast', { min: 0, max: 2, step: 0.01 });
+pane.addInput(settings, 'scale', { min: 0.2, max: 3, step: 0.01 });
+pane.addInput(settings, 'rotate', { min: -180, max: 180, step: 1 });
+
+let img = new Image();
+let imgX = 0, imgY = 0;
+
+document.getElementById('fileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    img.src = URL.createObjectURL(file);
+});
+
+function drawImage(){
+    if(!img.src) return;
+
+    ctx.save();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(settings.rotate * Math.PI/180);
+    ctx.scale(settings.scale, settings.scale);
+
+    ctx.filter = `brightness(${settings.brightness}) contrast(${settings.contrast})`;
+    ctx.drawImage(img, -img.width/2, -img.height/2);
+    ctx.restore();
+}
+
+img.onload = drawImage;
+pane.on('change', drawImage);
+</script>
 </body>
 </html>
